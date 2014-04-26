@@ -19,9 +19,7 @@ public class GameActivity extends Activity {
 
         // Create a GLSurfaceView instance and set it
         // as the ContentView for this Activity
-        Point size = new Point();
-        getWindowManager().getDefaultDisplay().getSize(size);
-        mGLView = new MyGLSurfaceView(this, size);
+        mGLView = new MyGLSurfaceView(this);
         setContentView(mGLView);
     }
 

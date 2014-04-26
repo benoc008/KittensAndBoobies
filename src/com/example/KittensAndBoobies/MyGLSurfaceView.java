@@ -14,10 +14,8 @@ import android.view.MotionEvent;
 public class MyGLSurfaceView extends GLSurfaceView {
 
     private final myRenderer mRenderer;
-    private Point size;
 
-
-    public MyGLSurfaceView(Context context, Point size) {
+    public MyGLSurfaceView(Context context) {
         super(context);
 
         // Create an OpenGL ES 2.0 context.
@@ -30,8 +28,6 @@ public class MyGLSurfaceView extends GLSurfaceView {
         // Render the view only when there is a change in the drawing data
        // setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
         setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
-
-        this.size = size;
     }
 
     private final float TOUCH_SCALE_FACTOR = 180.0f / 320;
@@ -62,10 +58,4 @@ public class MyGLSurfaceView extends GLSurfaceView {
         super.onPause();
         mRenderer.stopGame();
     }
-
-//    @Override
-//    public void onResume(){
-//        mRenderer.resumeGame();
-//        super.onResume();
-//    }
 }

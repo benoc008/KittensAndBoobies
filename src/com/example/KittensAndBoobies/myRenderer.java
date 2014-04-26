@@ -17,15 +17,14 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
     private Square player;
     private EnemyHandler eh;
+    private GameScheduler gs;
 
-    private float temp[] = {0f, 0f, 0f};
     float[] color = {0.2f, 0.898039216f, 0.709803922f, 1.0f };
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
-    private final float[] mRotationMatrix = new float[16];
     private int width = 540;
     private int height = 940;
     private float ratio = 1;
@@ -45,19 +44,21 @@ public class myRenderer implements GLSurfaceView.Renderer {
         float playerScale[] = {0.2f, 0.2f, 0.2f};
         player.setScale(playerScale);
 
-        eh = new EnemyHandler(this);
-        Thread t1 = new Thread(eh);
-        t1.start();
+        // nasty shit
+        gs = new GameScheduler(this);
+        eh = new EnemyHandler(this, gs);
+        gs.setEh(eh);
 
         eh.getEnemies().add(new Square());
-        //eh.getEnemies().add(new Square());
-        //eh.getEnemies().add(new Square());
-        //TODO : ezeket visszatenni....
 
         for(Square s : eh.getEnemies()){
             s.setPosition(Spawn());
             s.setColor(color);
         }
+
+
+        Thread t1 = new Thread(gs);
+        t1.start();
 
         startTime = System.currentTimeMillis();
     }
@@ -102,14 +103,14 @@ public class myRenderer implements GLSurfaceView.Renderer {
 //        Log.i(TAG, sb.toString());
 
         synchronized (eh) {
-            while(eh.isLock()){
+            while(gs.isLock()){
                 try {
                     ((Object)eh).wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            eh.setLock(true);
+            gs.setLock(true);
             //Log.i(TAG, "pwnd: renderGame");
             for (Square s : eh.getEnemies()) {
                 Matrix.setIdentityM(mMVPMatrix, 0);
@@ -119,36 +120,35 @@ public class myRenderer implements GLSurfaceView.Renderer {
                 Matrix.scaleM(mMVPMatrix, 0, s.getScale()[0], s.getScale()[0], s.getScale()[0]); // apply scale
                 s.draw(mMVPMatrix);
             }
-            eh.setLock(false);
+            gs.setLock(false);
             ((Object)eh).notify();
         }
     }
 
     public void calcGame(){
         synchronized (eh) {
-            while(eh.isLock()){
+            while(gs.isLock()){
                 try {
                     ((Object)eh).wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
-            eh.setLock(true);
+            gs.setLock(true);
             //Log.i(TAG, "pwnd: calcGame");
             for (Square s : eh.getToRemove()) {
                 eh.getEnemies().remove(s);
             }
 
             for (Square s : eh.getToAdd()) {
-                Square temp = new Square();
-                temp = s.clone();
+                Square temp = s.clone();
                 eh.getEnemies().add(temp);
             }
 
             eh.getToRemove().removeAll(eh.getToRemove());
             eh.getToAdd().removeAll(eh.getToAdd());
 
-            eh.setLock(false);
+            gs.setLock(false);
             ((Object)eh).notify();
         }
     }
@@ -225,11 +225,11 @@ public class myRenderer implements GLSurfaceView.Renderer {
     }
 
     public void stopGame(){
-        eh.setRunning(false);
+        gs.setRunning(false);
     }
 
     public void resumeGame(){
-        eh.setRunning(true);
+        gs.setRunning(true);
     }
 
     public Square getPlayer() {

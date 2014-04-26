@@ -7,27 +7,21 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnemyHandler implements Runnable{
+public class EnemyHandler {
 
     private static final String TAG = "EnemyHandler";
 
-    private boolean running;
-    private int level;
-    private int timer;
     private int hit;
     private myRenderer renderer;
+    private GameScheduler gs;
 
     private List<Square> enemies;
     private List<Square> toAdd;
     private List<Square> toRemove;
 
-    private boolean lock = false;
-
-    public EnemyHandler(myRenderer renderer){
+    public EnemyHandler(myRenderer renderer, GameScheduler gs){
         this.renderer = renderer;
-        running = true;
-        level = 1;
-        timer = 0;
+        this.gs = gs;
         hit = 0;
 
         enemies = new ArrayList<Square>();
@@ -87,7 +81,7 @@ public class EnemyHandler implements Runnable{
             color[0] += 0.01f;
             renderer.getPlayer().setColor(color);
         } else {
-            running = false;
+            gs.setRunning(false);
         }
 
         //Log.i(TAG, "EnemyHandler: Boobies won!");
@@ -117,49 +111,6 @@ public class EnemyHandler implements Runnable{
 
     }
 
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        while(running){
-            synchronized (this) {
-                while (lock) {
-                    try {
-                        ((Object)this).wait();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                lock = true;
-                //Log.i(TAG, "pwnd: run");
-                moveEnemies();
-                if (timer++ > 100) {
-                    timer = 0;
-                    if (level < 20)
-                        level++;
-                    addNew(toAdd);
-                }
-                lock = false;
-                ((Object) (this)).notify();
-            }
-            try{
-                Thread.sleep(75 - level * 3);       //the timing needs some optimization
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
-
-    public boolean isRunning() {
-        return running;
-    }
-
-    public void setRunning(boolean running) { this.running = running; }
-
     public List<Square> getEnemies() {
         return enemies;
     }
@@ -174,14 +125,6 @@ public class EnemyHandler implements Runnable{
 
     public List<Square> getToAdd() {
         return toAdd;
-    }
-
-    public boolean isLock() {
-        return lock;
-    }
-
-    public void setLock(boolean lock) {
-        this.lock = lock;
     }
 
 }
