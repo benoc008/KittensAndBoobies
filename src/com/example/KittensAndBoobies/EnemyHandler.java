@@ -14,6 +14,7 @@ public class EnemyHandler implements Runnable{
     private boolean running;
     private int level;
     private int timer;
+    private int hit;
     private myRenderer renderer;
 
     private List<Square> enemies;
@@ -27,6 +28,7 @@ public class EnemyHandler implements Runnable{
         running = true;
         level = 1;
         timer = 0;
+        hit = 0;
 
         enemies = new ArrayList<Square>();
         toAdd = new ArrayList<Square>();
@@ -63,30 +65,31 @@ public class EnemyHandler implements Runnable{
 //        return false;                       //means it's empty
 //    }
 
-
-    private boolean test = false;
     public boolean checkPlayerField(Square curr, float newPos[]){
-        // TODO : get these constants from player class
-        //if(newPos[1] - curr.getScale()[1]/2 < -0.8f + 0.2f/2f && newPos[1] + curr.getScale()[1]/2 > -0.8f - 0.2f/2f){
         if(     // the collision detection
                 newPos[1] - curr.getScale()[1]/2f < renderer.getPlayer().getPosition()[1] + renderer.getPlayer().getScale()[1]/2f &&
                 newPos[1] + curr.getScale()[1]/2f > renderer.getPlayer().getPosition()[1] - renderer.getPlayer().getScale()[1]/2f &&
                 newPos[0] + curr.getScale()[0]/2f > renderer.getPlayer().getPosition()[0] - renderer.getPlayer().getScale()[0]/2f &&
                 newPos[0] - curr.getScale()[0]/2f < renderer.getPlayer().getPosition()[0] + renderer.getPlayer().getScale()[0]/2f)
         {
-
-            Log.i(TAG, "mellete");
-            test = true;
-            running = false;
+            collision();
         } else {
-//            if (test)
-//                running = false;
+
         }
         return true;                       //means it's empty
     }
 
     public void collision(){
-        Log.i(TAG, "EnemyHandler: Boobies won!");
+        if(hit < 100){
+            hit++;
+            float color[] = renderer.getPlayer().getColor();
+            color[0] += hit/100f;
+            renderer.getPlayer().setColor(color);
+        } else {
+            running = false;
+        }
+
+        //Log.i(TAG, "EnemyHandler: Boobies won!");
     }
 
     public void addNew(List<Square> list){
@@ -122,7 +125,7 @@ public class EnemyHandler implements Runnable{
                     timer = 0;
                     if (level < 20)
                         level++;
-                    //addNew(toAdd); TODO visszatenni
+                    addNew(toAdd);
                 }
                 lock = false;
                 ((Object) (this)).notify();
