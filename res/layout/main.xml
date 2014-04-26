@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:weightSum="1">
+    <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Game"
+            android:layout_weight="0.17" android:id="@+id/newGameButton" android:onClick="startNewGame"/>
+    <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Options"
+            android:id="@+id/button2" android:layout_weight="0.18"/>
+</LinearLayout>
+
