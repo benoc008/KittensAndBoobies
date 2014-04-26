@@ -40,7 +40,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
         GLES20.glClearColor(0.1f, 0.5f, 0.2f, 1.0f);
 
         player = new Square();
-        float playerPos[] = {0f, -0.8f, 0f};
+        float playerPos[] = {0f, 0.8f, 0f};
         player.setPosition(playerPos);
         float playerScale[] = {0.2f, 0.2f, 0.2f};
         player.setScale(playerScale);
@@ -220,7 +220,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
     public float[] Spawn(){
         //a kepernyo felso felere x, y, z koordinata.
         //float rand[] = {calcPos((float) (Math.random()*width)), calcPos((float) (Math.random()*height/2f)), 0f};
-        float rand[] = {calcPos((float) (Math.random()*width)), 1f, 0f};
+        float rand[] = {calcPos((float) (Math.random()*width)), -1f, 0f};
         return rand;
     }
 

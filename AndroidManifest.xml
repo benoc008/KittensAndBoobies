@@ -14,7 +14,8 @@
             </intent-filter>
         </activity>
         <activity android:name="GameActivity"
-                  android:label="@string/app_name">
+                  android:label="@string/app_name"
+                  android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
                   android:parentActivityName="com.example.KittensAndBoobies.MainActivity" >
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"

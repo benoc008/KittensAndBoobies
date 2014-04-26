@@ -38,9 +38,9 @@ public class EnemyHandler implements Runnable{
     public void moveEnemies(){
         for(Square s : enemies) {
             float temp[] = s.getPosition();
-            temp[1] -= s.getSpeed();
+            temp[1] += s.getSpeed();
 
-            if (temp[1] < -1.0f - s.getScale()[1]/2) {                    //  - 1.0 - the half of the size
+            if (temp[1] > 1.0f + s.getScale()[1]/2) {                    //  - 1.0 - the half of the size
                 toRemove.add(s);
                 addNew(toAdd);
             }
@@ -53,24 +53,25 @@ public class EnemyHandler implements Runnable{
         }
     }
 
-//    public boolean checkFieldHorizontally(Square curr, float newPos[]){
-//        for(Square s : enemies){            //iterate through enemies
-//            float spos[] = s.getPosition();
-//            float sscale[] = s.getScale();
-//            float currscale[] = curr.getScale();
-//            if(newPos[0] < spos[0]+sscale[0]*width ...){
-//
-//            }
-//        }
-//        return false;                       //means it's empty
-//    }
+    public boolean checkNewField(Square curr){
+        for(Square s : enemies){            //iterate through enemies
+            if(     // the collision detection with padding, actually the top's check is not needed
+                curr.getPosition()[1] - curr.getScale()[1]/2f < s.getPosition()[1] + s.getScale()[1]/2f &&
+                curr.getPosition()[1] + curr.getScale()[1]/2f > s.getPosition()[1] - s.getScale()[1]/2f &&
+                curr.getPosition()[0] + curr.getScale()[0]/2f > s.getPosition()[0] - s.getScale()[0]/2f &&
+                curr.getPosition()[0] - curr.getScale()[0]/2f < s.getPosition()[0] + s.getScale()[0]/2f) {
+                return false;
+            }
+        }
+        return true;
+    }
 
     public boolean checkPlayerField(Square curr, float newPos[]){
         if(     // the collision detection
-                newPos[1] - curr.getScale()[1]/2f < renderer.getPlayer().getPosition()[1] + renderer.getPlayer().getScale()[1]/2f &&
-                newPos[1] + curr.getScale()[1]/2f > renderer.getPlayer().getPosition()[1] - renderer.getPlayer().getScale()[1]/2f &&
-                newPos[0] + curr.getScale()[0]/2f > renderer.getPlayer().getPosition()[0] - renderer.getPlayer().getScale()[0]/2f &&
-                newPos[0] - curr.getScale()[0]/2f < renderer.getPlayer().getPosition()[0] + renderer.getPlayer().getScale()[0]/2f)
+            newPos[1] - curr.getScale()[1]/2f < renderer.getPlayer().getPosition()[1] + renderer.getPlayer().getScale()[1]/2f &&
+            newPos[1] + curr.getScale()[1]/2f > renderer.getPlayer().getPosition()[1] - renderer.getPlayer().getScale()[1]/2f &&
+            newPos[0] + curr.getScale()[0]/2f > renderer.getPlayer().getPosition()[0] - renderer.getPlayer().getScale()[0]/2f &&
+            newPos[0] - curr.getScale()[0]/2f < renderer.getPlayer().getPosition()[0] + renderer.getPlayer().getScale()[0]/2f)
         {
             collision();
         } else {
@@ -92,14 +93,28 @@ public class EnemyHandler implements Runnable{
         //Log.i(TAG, "EnemyHandler: Boobies won!");
     }
 
+    /**
+     * Handles the birth of the field elements
+     * It creates the element then try to put it in an empty place. If not succeed try again 10 times, then drop it
+     * TODO algorithm needs some optimisation
+     * @param list
+     */
     public void addNew(List<Square> list){
         Square newborn = new Square();
-        float pos[] = renderer.Spawn();
-        pos[1] = 1f;
-        newborn.setPosition(pos);
-        float color[] = { 0.2f, 0.898039216f, 0.709803922f, 1.0f };
-        newborn.setColor(color);
-        list.add(newborn);
+        int tries = 10;
+        while(tries > 0) {
+            newborn.setPosition(renderer.Spawn());
+            if(checkNewField(newborn)){
+                tries = 0;
+                float color[] = { 0.2f, 0.898039216f, 0.709803922f, 1.0f };
+                newborn.setColor(color);
+                list.add(newborn);
+            } else {
+                tries--;
+            }
+        }
+        return;
+
     }
 
     @Override
