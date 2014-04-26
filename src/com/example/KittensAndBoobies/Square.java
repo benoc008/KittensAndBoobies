@@ -25,7 +25,7 @@ import android.opengl.GLES20;
 /**
  * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
-public class Square {
+public class Square extends GameObject{
 
     private final String vertexShaderCode =
             // This matrix member variable provides a hook to manipulate
@@ -65,14 +65,6 @@ public class Square {
 
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    private float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
-
-    private float position[] = {0f, 0f, 0f};
-
-    private float scale[] = {0.2f, 0.2f, 0.2f};
-
-    private float speed = 0.01f;
-
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
@@ -108,11 +100,11 @@ public class Square {
         GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
     }
-
-    public Square(float[] pos){
-        this();
-        this.position = pos;
-    }
+//
+//    public Square(float[] pos){
+//        this();
+//        this.position = pos;
+//    }
 
     /**
      * Encapsulates the OpenGL ES instructions for drawing this shape.
@@ -140,7 +132,7 @@ public class Square {
         mColorHandle = GLES20.glGetUniformLocation(mProgram, "vColor");
 
         // Set color for drawing the triangle
-        GLES20.glUniform4fv(mColorHandle, 1, color, 0);
+        GLES20.glUniform4fv(mColorHandle, 1, getColor(), 0);
 
         // get handle to shape's transformation matrix
         mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix");
@@ -161,41 +153,8 @@ public class Square {
 
     public Square clone(){
         Square temp = new Square();
-        temp.setColor(color);
-        temp.setPosition(position);
+        temp.setColor(getColor());
+        temp.setPosition(getPosition());
         return temp;
     }
-
-    public void setPosition(float position[]){
-        this.position = position;
-    }
-
-    public float[] getPosition(){
-        return position;
-    }
-
-    public void setColor(float[] color){
-        this.color = color;
-    }
-
-    public float[] getColor(){
-        return this.color;
-    }
-
-    public float[] getScale() {
-        return scale;
-    }
-
-    public void setScale(float scale[]) {
-        this.scale = scale;
-    }
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
 }
