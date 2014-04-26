@@ -65,7 +65,7 @@ public class Square {
 
     private final int vertexStride = COORDS_PER_VERTEX * 4; // 4 bytes per vertex
 
-    private float color[] = { 0.2f, 0.709803922f, 0.898039216f, 1.0f };
+    private float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
 
     private float position[] = {0f, 0f, 0f};
 

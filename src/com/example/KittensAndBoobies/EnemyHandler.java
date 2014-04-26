@@ -83,7 +83,7 @@ public class EnemyHandler implements Runnable{
         if(hit < 100){
             hit++;
             float color[] = renderer.getPlayer().getColor();
-            color[0] += hit/100f;
+            color[0] += 0.01f;
             renderer.getPlayer().setColor(color);
         } else {
             running = false;
