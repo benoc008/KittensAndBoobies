@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
+import android.view.View;
 
 /**
  * Created by benoc on 19/04/2014.
@@ -12,6 +13,7 @@ import android.os.Bundle;
 public class GameActivity extends Activity {
 
     private GLSurfaceView mGLView;
+    public final static String EXTRA_MESSAGE = "com.example.KittensAndBoobies.MESSAGE";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -40,5 +42,12 @@ public class GameActivity extends Activity {
         // If you de-allocated graphic objects for onPause()
         // this is a good place to re-allocate them.
         mGLView.onResume();
+    }
+
+    public void gameOver(int points){
+        Intent intent = new Intent(this, GameOverActivity.class);
+        intent.putExtra(EXTRA_MESSAGE, " " + points);
+        startActivity(intent);
+        finish();
     }
 }

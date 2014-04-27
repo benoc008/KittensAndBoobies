@@ -1,5 +1,7 @@
 package com.example.KittensAndBoobies;
 
+import android.content.Intent;
+
 /**
  * Created by benoc on 26/04/2014.
  */
@@ -46,8 +48,10 @@ public class GameScheduler implements Runnable {
                 eh.moveEnemies();
                 if (timer++ > 100) {
                     timer = 0;
-                    if (level < 20)
+                    if (level < 20) {
                         level++;
+                        points += 100;
+                    }
                 }
 
                 //put objects randomly
@@ -57,6 +61,7 @@ public class GameScheduler implements Runnable {
                     } else {
                         eh.addNew(eh.getToAdd(), new Heal());
                     }
+                    points++;
                 }
 
                 lock = false;
@@ -67,8 +72,9 @@ public class GameScheduler implements Runnable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
+        //call game over
+        renderer.getActivity().gameOver(points);
     }
 
     public boolean isRunning() {

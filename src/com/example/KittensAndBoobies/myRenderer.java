@@ -1,5 +1,7 @@
 package com.example.KittensAndBoobies;
 
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
@@ -32,6 +34,8 @@ public class myRenderer implements GLSurfaceView.Renderer {
     private long dt;
     private long startTime;
 
+    private GameActivity activity;
+
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         // Set the background frame color
@@ -49,7 +53,6 @@ public class myRenderer implements GLSurfaceView.Renderer {
         for(GameObject s : eh.getEnemies()){
             s.setPosition(Spawn());
         }
-
 
         Thread t1 = new Thread(gs);
         t1.start();
@@ -228,5 +231,13 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
     public float getRatio() {
         return ratio;
+    }
+
+    public GameActivity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(GameActivity activity) {
+        this.activity = activity;
     }
 }

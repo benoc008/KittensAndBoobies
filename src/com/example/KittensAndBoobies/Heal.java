@@ -150,5 +150,6 @@ public class Heal extends GameObject {
             color[0] -= 0.01f;
             player.setColor(color);
         }
+        gs.setPoints(gs.getPoints()+gs.getLevel());
     }
 }
