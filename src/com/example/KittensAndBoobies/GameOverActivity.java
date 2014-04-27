@@ -23,6 +23,7 @@ public class GameOverActivity extends Activity {
     public void startNewGame(View view){
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void exit(View view){
