@@ -5,6 +5,8 @@ package com.example.KittensAndBoobies;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class EnemyHandler {
@@ -57,31 +59,60 @@ public class EnemyHandler {
      * @param curr
      * @return
      */
-    public boolean checkNewField(GameObject curr){
-        float width = renderer.getRatio()*2;
-        float prev = -renderer.getRatio();
-        boolean decide = false;
-        if(enemies.get(enemies.size() - 1).getPosition()[0] >
-                width - enemies.get(enemies.size() - 1).getScale()[0]/2f - renderer.getPlayer().getScale()[0] - 0.05) {
-            for (GameObject s : enemies) {            //iterate through enemies
-                if (s.getClass() != Heal.class) {
-//                if (     // the collision detection with padding, actually the top's check is not needed
-//                    curr.getPosition()[1] - curr.getScale()[1] / 2f < s.getPosition()[1] + s.getScale()[1] / 2f &&
-//                    curr.getPosition()[1] + curr.getScale()[1] / 2f > s.getPosition()[1] - s.getScale()[1] / 2f &&
-//                    curr.getPosition()[0] + curr.getScale()[0] / 2f > s.getPosition()[0] - s.getScale()[0] / 2f &&
-//                    curr.getPosition()[0] - curr.getScale()[0] / 2f < s.getPosition()[0] + s.getScale()[0] / 2f) {
-//                    return false;
-//                }
-                    if (s.getPosition()[1] < -0.3f) {
-                        if (s.getPosition()[0] > prev + s.getScale()[0]/2f + renderer.getPlayer().getScale()[0] + 0.05f) {
-                            decide = true;
-                        }
-                    }
-                    return decide;
-                }
+    public GameObject getMePosition(GameObject curr){
+        //Creating a temporary list with the potential objects
+        List<GameObject> coll = new ArrayList<GameObject>();
+        coll.addAll(toAdd);
+        for(GameObject o : enemies){
+            if(o.getPosition()[1] < -0.5){
+                coll.add(o);
             }
         }
-        return true;
+        Collections.sort(enemies, new Square());            //maybe we should create an own comparator class for this
+
+        boolean success = false;
+        GameObject newtry = curr.clone();
+
+        for (int i = 0; i < 10; i++) {                      //try it 10 times, then return null
+            newtry.setPosition(renderer.Spawn());
+            if(checkOne(coll, newtry)){
+                success = true;
+                break;
+            }
+        }
+
+        if(!success){
+            return null;
+        } else {
+            return newtry;
+        }
+    }
+
+    public boolean checkOne(List<GameObject> coll, GameObject curr){
+        List<GameObject> temp = new ArrayList<GameObject>();
+        temp.addAll(coll);
+        temp.add(curr);
+        Collections.sort(temp, new Square());                       //too much sorting
+                                                                    //TODO maybe we should use TREESET....
+        boolean result = false;
+        float prev = -renderer.getRatio();
+
+        // first check the last element, next to the wall, if it fits, we can skip the iteration
+        if(temp.get(temp.size() - 1).getPosition()[0] >
+                renderer.getRatio() - enemies.get(enemies.size() - 1).getScale()[0]/2f - renderer.getPlayer().getScale()[0] - 0.05f) {
+            // otherwise check the gaps
+            // actually checking the new object and its neighbours would be enough
+            for (GameObject o : temp) {
+                if (o.getPosition()[0] - o.getScale()[0] / 2f > prev + o.getScale()[0] / 2f + renderer.getPlayer().getScale()[0] + 0.05f) {
+                    result = true;
+                    break;
+                }
+                prev = o.getPosition()[0];
+            }
+        } else {
+            result = true;
+        }
+        return result;
     }
 
     public boolean checkPlayerField(GameObject curr, float newPos[]){
@@ -103,18 +134,10 @@ public class EnemyHandler {
      * @param list
      */
     public void addNew(List<GameObject> list, GameObject newborn){
-        int tries = 10;
-        while(tries > 0) {
-            newborn.setPosition(renderer.Spawn());
-            if(checkNewField(newborn)){
-                tries = 0;
-                list.add(newborn);
-            } else {
-                tries--;
-            }
+        GameObject newpos = getMePosition(newborn);
+        if(newpos != null){
+            list.add(newpos);
         }
-        return;
-
     }
 
     public List<GameObject> getEnemies() {

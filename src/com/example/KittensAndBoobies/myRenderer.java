@@ -25,7 +25,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
     private final float[] mProjectionMatrix = new float[16];
     private final float[] mViewMatrix = new float[16];
     private int width = 540;
-    private int height = 940;
+    private int height = 960;
     private float ratio = 1;
 
     private long endTime;

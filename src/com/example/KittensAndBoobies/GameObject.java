@@ -1,10 +1,12 @@
 package com.example.KittensAndBoobies;
 
+import java.util.Comparator;
+
 /**
  * Created by benoc on 27/04/2014.
  * All kinds of enemies and buffs and stuff must extend from this
  */
-public abstract class GameObject {
+public abstract class GameObject implements Comparator<GameObject> {
     private float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
     private float position[] = {0f, 0f, 0f};
     private float scale[] = {0.2f, 0.2f, 0.2f};
@@ -17,6 +19,13 @@ public abstract class GameObject {
     public abstract void onCollision(GameObject player, GameScheduler gs);
 
     public abstract void draw(float[] m);
+
+    @Override
+    public int compare(GameObject a, GameObject b){
+        return (a.getPosition()[0] < b.getPosition()[0])? -1
+                : (a.getPosition()[0] > b.getPosition()[0])? 1
+                : 0;
+    }
 
     public void setPosition(float position[]){
         this.position = position;

@@ -48,7 +48,7 @@ public class GameScheduler implements Runnable {
                     timer = 0;
                     if (level < 20)
                         level++;
-                    if(Math.random() > 0.1) {
+                    if(Math.random() > 0.1) {                   //put some heals too
                         eh.addNew(eh.getToAdd(), new Square());
                     } else {
                         eh.addNew(eh.getToAdd(), new Heal());
