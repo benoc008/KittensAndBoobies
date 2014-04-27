@@ -36,7 +36,7 @@ public class EnemyHandler {
 
             if (temp[1] > 1.0f + s.getScale()[1]/2) {
                 toRemove.add(s);
-                addNew(toAdd, new Square());
+                //addNew(toAdd, new Square());      //let the GameScheduler handle this
             }
 
             if(s.getLife() > 0){
