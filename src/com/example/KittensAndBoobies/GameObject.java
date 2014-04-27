@@ -9,9 +9,14 @@ public abstract class GameObject {
     private float position[] = {0f, 0f, 0f};
     private float scale[] = {0.2f, 0.2f, 0.2f};
     private float speed = 0.01f;
+    private int life = -1;          //means disabled
 
 
-    public abstract Square clone();
+    public abstract GameObject clone();
+
+    public abstract void onCollision(GameObject player, GameScheduler gs);
+
+    public abstract void draw(float[] m);
 
     public void setPosition(float position[]){
         this.position = position;
@@ -43,5 +48,13 @@ public abstract class GameObject {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
     }
 }

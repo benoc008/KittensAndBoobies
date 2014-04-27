@@ -42,13 +42,20 @@ public class GameScheduler implements Runnable {
                 }
                 lock = true;
                 //Log.i(TAG, "pwnd: run");
+
                 eh.moveEnemies();
                 if (timer++ > 100) {
                     timer = 0;
                     if (level < 20)
                         level++;
-                    eh.addNew(eh.getToAdd());
+                    if(Math.random() > 0.1) {
+                        eh.addNew(eh.getToAdd(), new Square());
+                    } else {
+                        eh.addNew(eh.getToAdd(), new Heal());
+                    }
                 }
+
+
                 lock = false;
                 ((Object) (eh)).notify();
             }

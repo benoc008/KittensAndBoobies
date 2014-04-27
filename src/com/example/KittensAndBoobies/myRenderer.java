@@ -10,16 +10,15 @@ import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by benoc on 19/04/2014.
+ * TODO this whole class should be overhauled. it's task is to render, nothing else
  */
 public class myRenderer implements GLSurfaceView.Renderer {
 
     private static final String TAG = "myRenderer";
 
-    private Square player;
+    private Player player;
     private EnemyHandler eh;
     private GameScheduler gs;
-
-    float[] color = {0.2f, 0.898039216f, 0.709803922f, 1.0f };
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private float[] mMVPMatrix = new float[16];
@@ -38,11 +37,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
         // Set the background frame color
         GLES20.glClearColor(0.1f, 0.5f, 0.2f, 1.0f);
 
-        player = new Square();
-        float playerPos[] = {0f, 0.8f, 0f};
-        player.setPosition(playerPos);
-        float playerScale[] = {0.2f, 0.2f, 0.2f};
-        player.setScale(playerScale);
+        player = new Player();
 
         // nasty shit
         gs = new GameScheduler(this);
@@ -51,9 +46,8 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
         eh.getEnemies().add(new Square());
 
-        for(Square s : eh.getEnemies()){
+        for(GameObject s : eh.getEnemies()){
             s.setPosition(Spawn());
-            s.setColor(color);
         }
 
 
@@ -97,10 +91,6 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
 
         player.draw(mMVPMatrix);
-//        StringBuilder sb = new StringBuilder();
-//        for(float f : player.getPosition())
-//            sb.append(f + " ");
-//        Log.i(TAG, sb.toString());
 
         synchronized (eh) {
             while(gs.isLock()){
@@ -112,7 +102,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
             }
             gs.setLock(true);
             //Log.i(TAG, "pwnd: renderGame");
-            for (Square s : eh.getEnemies()) {
+            for (GameObject s : eh.getEnemies()) {
                 Matrix.setIdentityM(mMVPMatrix, 0);
                 Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
                 Matrix.translateM(mMVPMatrix, 0, s.getPosition()[0], s.getPosition()[1], s.getPosition()[2]); // apply translation
@@ -136,12 +126,12 @@ public class myRenderer implements GLSurfaceView.Renderer {
             }
             gs.setLock(true);
             //Log.i(TAG, "pwnd: calcGame");
-            for (Square s : eh.getToRemove()) {
+            for (GameObject s : eh.getToRemove()) {
                 eh.getEnemies().remove(s);
             }
 
-            for (Square s : eh.getToAdd()) {
-                Square temp = s.clone();
+            for (GameObject s : eh.getToAdd()) {
+                GameObject temp = s.clone();
                 eh.getEnemies().add(temp);
             }
 
@@ -232,7 +222,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
         gs.setRunning(true);
     }
 
-    public Square getPlayer() {
+    public Player getPlayer() {
         return player;
     }
 }

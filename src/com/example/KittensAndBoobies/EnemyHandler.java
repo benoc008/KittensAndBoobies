@@ -11,44 +11,48 @@ public class EnemyHandler {
 
     private static final String TAG = "EnemyHandler";
 
-    private int hit;
     private myRenderer renderer;
     private GameScheduler gs;
 
-    private List<Square> enemies;
-    private List<Square> toAdd;
-    private List<Square> toRemove;
+    private List<GameObject> enemies;
+    private List<GameObject> toAdd;
+    private List<GameObject> toRemove;
 
     public EnemyHandler(myRenderer renderer, GameScheduler gs){
         this.renderer = renderer;
         this.gs = gs;
-        hit = 0;
 
-        enemies = new ArrayList<Square>();
-        toAdd = new ArrayList<Square>();
-        toRemove = new ArrayList<Square>();
+        enemies = new ArrayList<GameObject>();
+        toAdd = new ArrayList<GameObject>();
+        toRemove = new ArrayList<GameObject>();
     }
 
     public void moveEnemies(){
-        for(Square s : enemies) {
+        for(GameObject s : enemies) {
             float temp[] = s.getPosition();
             temp[1] += s.getSpeed();
 
             if (temp[1] > 1.0f + s.getScale()[1]/2) {                    //  - 1.0 - the half of the size
                 toRemove.add(s);
-                addNew(toAdd);
+                addNew(toAdd, new Square());
+            }
+
+            if(s.getLife() > 0){
+                s.setLife(s.getLife() - 1);
+            } else if(s.getLife() == 0){
+                toRemove.add(s);
             }
 
             if(checkPlayerField(s, temp)) {
                 s.setPosition(temp);
             } else {
-                collision();
+                s.onCollision(renderer.getPlayer(),gs);
             }
         }
     }
 
-    public boolean checkNewField(Square curr){
-        for(Square s : enemies){            //iterate through enemies
+    public boolean checkNewField(GameObject curr){
+        for(GameObject s : enemies){            //iterate through enemies
             if(     // the collision detection with padding, actually the top's check is not needed
                 curr.getPosition()[1] - curr.getScale()[1]/2f < s.getPosition()[1] + s.getScale()[1]/2f &&
                 curr.getPosition()[1] + curr.getScale()[1]/2f > s.getPosition()[1] - s.getScale()[1]/2f &&
@@ -60,31 +64,16 @@ public class EnemyHandler {
         return true;
     }
 
-    public boolean checkPlayerField(Square curr, float newPos[]){
+    public boolean checkPlayerField(GameObject curr, float newPos[]){
         if(     // the collision detection
             newPos[1] - curr.getScale()[1]/2f < renderer.getPlayer().getPosition()[1] + renderer.getPlayer().getScale()[1]/2f &&
             newPos[1] + curr.getScale()[1]/2f > renderer.getPlayer().getPosition()[1] - renderer.getPlayer().getScale()[1]/2f &&
             newPos[0] + curr.getScale()[0]/2f > renderer.getPlayer().getPosition()[0] - renderer.getPlayer().getScale()[0]/2f &&
             newPos[0] - curr.getScale()[0]/2f < renderer.getPlayer().getPosition()[0] + renderer.getPlayer().getScale()[0]/2f)
         {
-            collision();
-        } else {
-
+            return false;
         }
         return true;                       //means it's empty
-    }
-
-    public void collision(){
-        if(hit < 100){
-            hit++;
-            float color[] = renderer.getPlayer().getColor();
-            color[0] += 0.01f;
-            renderer.getPlayer().setColor(color);
-        } else {
-            gs.setRunning(false);
-        }
-
-        //Log.i(TAG, "EnemyHandler: Boobies won!");
     }
 
     /**
@@ -93,15 +82,12 @@ public class EnemyHandler {
      * TODO algorithm needs some optimisation
      * @param list
      */
-    public void addNew(List<Square> list){
-        Square newborn = new Square();
+    public void addNew(List<GameObject> list, GameObject newborn){
         int tries = 10;
         while(tries > 0) {
             newborn.setPosition(renderer.Spawn());
             if(checkNewField(newborn)){
                 tries = 0;
-                float color[] = { 0.2f, 0.898039216f, 0.709803922f, 1.0f };
-                newborn.setColor(color);
                 list.add(newborn);
             } else {
                 tries--;
@@ -111,19 +97,19 @@ public class EnemyHandler {
 
     }
 
-    public List<Square> getEnemies() {
+    public List<GameObject> getEnemies() {
         return enemies;
     }
 
-    public void setEnemies(List<Square> enemies) {
+    public void setEnemies(List<GameObject> enemies) {
         this.enemies = enemies;
     }
 
-    public List<Square> getToRemove() {
+    public List<GameObject> getToRemove() {
         return toRemove;
     }
 
-    public List<Square> getToAdd() {
+    public List<GameObject> getToAdd() {
         return toAdd;
     }
 
