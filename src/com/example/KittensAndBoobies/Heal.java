@@ -141,6 +141,9 @@ public class Heal extends GameObject {
     }
 
     public void onCollision(GameObject player, GameScheduler gs){
+        if(getLife() == -1){
+            setLife(25);
+        }
         if(player.getLife() < 100){
             player.setLife(player.getLife() + 1);
             float color[] = player.getColor();

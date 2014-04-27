@@ -225,4 +225,8 @@ public class myRenderer implements GLSurfaceView.Renderer {
     public Player getPlayer() {
         return player;
     }
+
+    public float getRatio() {
+        return ratio;
+    }
 }

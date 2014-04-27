@@ -32,7 +32,7 @@ public class EnemyHandler {
             float temp[] = s.getPosition();
             temp[1] += s.getSpeed();
 
-            if (temp[1] > 1.0f + s.getScale()[1]/2) {                    //  - 1.0 - the half of the size
+            if (temp[1] > 1.0f + s.getScale()[1]/2) {
                 toRemove.add(s);
                 addNew(toAdd, new Square());
             }
@@ -46,19 +46,39 @@ public class EnemyHandler {
             if(checkPlayerField(s, temp)) {
                 s.setPosition(temp);
             } else {
-                s.onCollision(renderer.getPlayer(),gs);
+                s.onCollision(renderer.getPlayer(), gs);
             }
         }
     }
 
+    /**
+     * when a new object is added, this method makes sure that the game won't be impossible
+     * we are checking the top 0.5 for enough space horizontally
+     * @param curr
+     * @return
+     */
     public boolean checkNewField(GameObject curr){
-        for(GameObject s : enemies){            //iterate through enemies
-            if(     // the collision detection with padding, actually the top's check is not needed
-                curr.getPosition()[1] - curr.getScale()[1]/2f < s.getPosition()[1] + s.getScale()[1]/2f &&
-                curr.getPosition()[1] + curr.getScale()[1]/2f > s.getPosition()[1] - s.getScale()[1]/2f &&
-                curr.getPosition()[0] + curr.getScale()[0]/2f > s.getPosition()[0] - s.getScale()[0]/2f &&
-                curr.getPosition()[0] - curr.getScale()[0]/2f < s.getPosition()[0] + s.getScale()[0]/2f) {
-                return false;
+        float width = renderer.getRatio()*2;
+        float prev = -renderer.getRatio();
+        boolean decide = false;
+        if(enemies.get(enemies.size() - 1).getPosition()[0] >
+                width - enemies.get(enemies.size() - 1).getScale()[0]/2f - renderer.getPlayer().getScale()[0] - 0.05) {
+            for (GameObject s : enemies) {            //iterate through enemies
+                if (s.getClass() != Heal.class) {
+//                if (     // the collision detection with padding, actually the top's check is not needed
+//                    curr.getPosition()[1] - curr.getScale()[1] / 2f < s.getPosition()[1] + s.getScale()[1] / 2f &&
+//                    curr.getPosition()[1] + curr.getScale()[1] / 2f > s.getPosition()[1] - s.getScale()[1] / 2f &&
+//                    curr.getPosition()[0] + curr.getScale()[0] / 2f > s.getPosition()[0] - s.getScale()[0] / 2f &&
+//                    curr.getPosition()[0] - curr.getScale()[0] / 2f < s.getPosition()[0] + s.getScale()[0] / 2f) {
+//                    return false;
+//                }
+                    if (s.getPosition()[1] < -0.3f) {
+                        if (s.getPosition()[0] > prev + s.getScale()[0]/2f + renderer.getPlayer().getScale()[0] + 0.05f) {
+                            decide = true;
+                        }
+                    }
+                    return decide;
+                }
             }
         }
         return true;
