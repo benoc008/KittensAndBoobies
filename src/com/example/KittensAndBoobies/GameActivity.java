@@ -1,11 +1,14 @@
 package com.example.KittensAndBoobies;
 
+import Database.DataSource;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.view.View;
+
+import java.util.Random;
 
 /**
  * Created by benoc on 19/04/2014.
@@ -44,10 +47,18 @@ public class GameActivity extends Activity {
         mGLView.onResume();
     }
 
-    public void gameOver(int points){
+    public void gameOver(int points, long start, long end){
+        //get the intent && start the activity
         Intent intent = new Intent(this, GameOverActivity.class);
         intent.putExtra(EXTRA_MESSAGE, " " + points);
         startActivity(intent);
+
+        // save the scores
+        DataSource datasource = new DataSource(this);
+        datasource.open();
+        datasource.createRecord(points, start, end-start);
+        datasource.close();
+
         finish();
     }
 }

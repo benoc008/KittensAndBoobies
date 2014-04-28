@@ -21,4 +21,9 @@ public class MainActivity extends Activity {
         Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
     }
+
+    public void startHighScores(View view){
+        Intent intent = new Intent(this, ScoresActivity.class);
+        startActivity(intent);
+    }
 }

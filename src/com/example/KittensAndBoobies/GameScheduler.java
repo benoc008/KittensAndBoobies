@@ -2,6 +2,11 @@ package com.example.KittensAndBoobies;
 
 import android.content.Intent;
 
+import java.util.Random;
+import Database.*;
+import android.util.Log;
+import android.widget.ArrayAdapter;
+
 /**
  * Created by benoc on 26/04/2014.
  */
@@ -12,6 +17,7 @@ public class GameScheduler implements Runnable {
     private int level;
     private int timer;
     private int points;
+    private long start;
 
     private myRenderer renderer;
     private EnemyHandler eh;
@@ -24,6 +30,7 @@ public class GameScheduler implements Runnable {
         level = 0;
         timer = 0;
         points = 0;
+        start = System.currentTimeMillis();
     }
 
     @Override
@@ -48,9 +55,10 @@ public class GameScheduler implements Runnable {
                 eh.moveEnemies();
                 if (timer++ > 100) {
                     timer = 0;
-                    if (level < 20) {
+                    if (level < 21) {
                         level++;
                         points += 100;
+                        //Log.i("GameScheduler", "Level: " + level);
                     }
                 }
 
@@ -74,7 +82,7 @@ public class GameScheduler implements Runnable {
             }
         }
         //call game over
-        renderer.getActivity().gameOver(points);
+        renderer.getActivity().gameOver(points, start, System.currentTimeMillis());
     }
 
     public boolean isRunning() {
