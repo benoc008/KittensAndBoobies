@@ -37,5 +37,12 @@
                     android:name="android.support.PARENT_ACTIVITY"
                     android:value="com.example.KittensAndBoobies.MainActivity" />
         </activity>
+        <activity android:name="ProfileActivity"
+                  android:label="@string/app_name">
+            android:parentActivityName="com.example.KittensAndBoobies.MainActivity" >
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value="com.example.KittensAndBoobies.MainActivity" />
+        </activity>
     </application>
 </manifest>

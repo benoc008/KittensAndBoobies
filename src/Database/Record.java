@@ -1,13 +1,21 @@
 package Database;
 
+
 /**
  * Created by benoc on 28/04/2014.
  */
-public class Record {
+public class Record implements Comparable<Record>{
     private long id;
     private long score;
     private long start_time;
     private long duration;
+
+    @Override
+    public int compareTo(Record another) {
+        return (score - another.getScore() > 0)? 1
+              :(score - another.getScore() < 0)? -1
+              : 0;
+    }
 
     @Override
     public String toString() {

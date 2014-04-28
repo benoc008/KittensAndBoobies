@@ -22,6 +22,11 @@ public class MainActivity extends Activity {
         startActivity(intent);
     }
 
+    public void startProfile(View view){
+        Intent intent = new Intent(this, ProfileActivity.class);
+        startActivity(intent);
+    }
+
     public void startHighScores(View view){
         Intent intent = new Intent(this, ScoresActivity.class);
         startActivity(intent);

@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,6 +65,7 @@ public class DataSource {
             cursor.moveToNext();
         }
         cursor.close();
+        Collections.sort(records);
         return records;
     }
 }

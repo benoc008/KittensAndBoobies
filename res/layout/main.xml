@@ -8,15 +8,24 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="New Game"
-            android:layout_weight="0.25" android:id="@+id/newGameButton" android:onClick="startNewGame"
+            android:layout_weight="0.25"
+            android:id="@+id/newGameButton"
+            android:onClick="startNewGame"
             android:textSize="40dp"/>
     <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0.25" android:textSize="40sp" android:text="High Scores"
+            android:layout_weight="0.25"
+            android:textSize="40sp"
+            android:text="High Scores"
             android:onClick="startHighScores"
             android:id="@+id/highScoresButton"/>
-    <Button android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Settings"
-            android:id="@+id/settingsButton" android:layout_weight="0.25" android:textSize="40sp"/>
+    <Button android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Profile"
+            android:id="@+id/profileButton"
+            android:layout_weight="0.25"
+            android:onClick="startProfile"
+            android:textSize="40sp"/>
 </LinearLayout>
 
