@@ -34,7 +34,7 @@ public class ProfileActivity extends Activity {
     public void loadStats(){
         datasource.open();
         List<Record> values = datasource.getAllRecords();
-        long bestScore = values.get(values.size() - 1).getScore();
+        long bestScore = values.get(0).getScore();
         long numGames = values.size();
         long sumDuration = 0;
         for(Record r : values){

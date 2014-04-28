@@ -66,6 +66,7 @@ public class DataSource {
         }
         cursor.close();
         Collections.sort(records);
+        Collections.reverse(records);
         return records;
     }
 }
