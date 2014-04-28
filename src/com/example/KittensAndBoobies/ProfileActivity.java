@@ -52,7 +52,7 @@ public class ProfileActivity extends Activity {
 
         //duration
         Date durationDate = new Date(sumDuration - TimeZone.getDefault().getRawOffset());
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS", Locale.getDefault());
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
         TextView duration = (TextView) findViewById(R.id.textTime);
         duration.setText(formatter.format(durationDate));

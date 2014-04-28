@@ -58,7 +58,7 @@ public class ScoreAdapter extends BaseAdapter{
 
         //duration
         Date durationDate = new Date(values.get(position).getDuration() - TimeZone.getDefault().getRawOffset());
-        DateFormat formatter = new SimpleDateFormat("HH:mm:ss:SSS", Locale.getDefault());
+        DateFormat formatter = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
         String durationFormatted = formatter.format(durationDate);
 
         TextView duration = (TextView) vi.findViewById(R.id.duration);
