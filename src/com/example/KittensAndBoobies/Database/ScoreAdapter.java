@@ -1,4 +1,4 @@
-package Database;
+package com.example.KittensAndBoobies.Database;
 
 import android.content.Context;
 import android.view.LayoutInflater;

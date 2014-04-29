@@ -1,10 +1,8 @@
 package com.example.KittensAndBoobies;
 
 import android.app.ListActivity;
-import Database.*;
+import com.example.KittensAndBoobies.Database.*;
 import android.os.Bundle;
-import android.widget.Adapter;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 
 import java.util.List;

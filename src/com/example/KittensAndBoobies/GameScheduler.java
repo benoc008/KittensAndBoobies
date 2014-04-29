@@ -1,12 +1,5 @@
 package com.example.KittensAndBoobies;
 
-import android.content.Intent;
-
-import java.util.Random;
-import Database.*;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-
 /**
  * Created by benoc on 26/04/2014.
  */

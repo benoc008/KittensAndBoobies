@@ -1,7 +1,7 @@
-package com.example.KittensAndBoobies;
+package com.example.KittensAndBoobies.Profile;
 
-import Database.DataSource;
-import Database.Record;
+import com.example.KittensAndBoobies.Database.DataSource;
+import com.example.KittensAndBoobies.Database.Record;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -13,24 +13,25 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.*;
+import com.example.KittensAndBoobies.Profile.AchiAdapter;
+import com.example.KittensAndBoobies.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * Created by benoc on 28/04/2014.
  */
 public class ProfileActivity extends Activity implements ViewSwitcher.ViewFactory{
 
+    //shared perferences
     private final String PREF_NAME = "MyKitten";
     private int kittyId;
     private String kittyName;
     private ImageView ib;
 
+    //image switcher + popup
     private ImageSwitcher imageSwitcher;
     private DataSource datasource;
     private PopupWindow popupWindow;
@@ -46,6 +47,17 @@ public class ProfileActivity extends Activity implements ViewSwitcher.ViewFactor
     private int currentIndex = 0;
 
     float initialX;
+
+    // db values
+    private long bestScore;
+    private long numGames;
+    private long sumDuration;
+
+
+    //achievements
+    GridView gridView;
+    //put achies here
+    private List<Achievement> achis;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,26 +100,32 @@ public class ProfileActivity extends Activity implements ViewSwitcher.ViewFactor
             }
         });
 
-        datasource = new DataSource(this);
+        readDB();
         loadStats();
         loadAchies();
+    }
+
+    public void readDB(){
+        datasource = new DataSource(this);
+        datasource.open();
+        List<Record> values = datasource.getAllRecords();
+        if(values.size() == 0) {
+            return;
+        }
+        bestScore = values.get(0).getScore();
+        numGames = values.size();
+        sumDuration = 0;
+        for(Record r : values){
+            sumDuration += r.getDuration();
+        }
+
+        //TODO datasource.close(); ????
     }
 
     /**
      * Loads the stats bar from the database
      */
     public void loadStats(){
-        datasource.open();
-        List<Record> values = datasource.getAllRecords();
-        if(values.size() == 0) {
-            return;
-        }
-        long bestScore = values.get(0).getScore();
-        long numGames = values.size();
-        long sumDuration = 0;
-        for(Record r : values){
-            sumDuration += r.getDuration();
-        }
 
         TextView name = (TextView) findViewById(R.id.textName);
         name.setText(kittyName);
@@ -126,11 +144,43 @@ public class ProfileActivity extends Activity implements ViewSwitcher.ViewFactor
         duration.setText(formatter.format(durationDate));
 
         ib = (ImageView) findViewById(R.id.imageButton);
-        ib.setImageResource(R.drawable.profile_kitten1 + (int)kittyId);
+        ib.setImageResource(R.drawable.profile_kitten1 + (int) kittyId);
     }
 
+    /**
+     * Defines the achievements, then sets the adapter to the gridview
+     * onclicklistener
+     */
     public void loadAchies(){
-        
+        gridView = (GridView) findViewById(R.id.gridView);
+
+        // Defining the achievements
+        // idk, maybe we should get this from an xml?
+        achis = new ArrayList<Achievement>();
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 scores", bestScore > 50000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 100000 scores", bestScore > 100000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 500000 scores", bestScore > 500000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 1000000 scores", bestScore > 1000000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 score", bestScore > 50000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 score", bestScore > 50000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 score", bestScore > 50000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 score", bestScore > 50000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 score", bestScore > 50000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 score", bestScore > 50000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 score", bestScore > 50000));
+        achis.add(new Achievement(this, R.drawable.achi_temp, "get 50000 score", bestScore > 50000));
+
+
+        gridView.setAdapter(new AchiAdapter(this, achis));
+
+        //the gettext thing might be better to get from a hidden textview??? (and put in the adapter)
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Toast.makeText(
+                        getApplicationContext(), achis.get(position).getText() , Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
     /**

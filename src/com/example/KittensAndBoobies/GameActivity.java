@@ -1,14 +1,10 @@
 package com.example.KittensAndBoobies;
 
-import Database.DataSource;
+import com.example.KittensAndBoobies.Database.DataSource;
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.os.Bundle;
-import android.view.View;
-
-import java.util.Random;
 
 /**
  * Created by benoc on 19/04/2014.

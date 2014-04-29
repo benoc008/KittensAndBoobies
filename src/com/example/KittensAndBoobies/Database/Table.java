@@ -1,4 +1,4 @@
-package Database;
+package com.example.KittensAndBoobies.Database;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
