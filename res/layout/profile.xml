@@ -3,15 +3,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" android:weightSum="1">
+              android:layout_height="match_parent"
+              android:weightSum="1"
+              android:id="@+id/profile"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:clickable="true">
     <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" android:weightSum="1">
-        <ImageButton
+        <ImageView
                 android:layout_width="162dp"
                 android:layout_height="198dp"
-                android:id="@+id/imageButton" android:src="@drawable/profile_kitten1" android:onClick="changePicture"/>
+                android:id="@+id/imageButton" android:src="@drawable/profile_kitten1" android:onClick="changePicture"
+                android:scaleType="centerInside"
+                android:contentDescription="Kitten Profile"/>
         <LinearLayout
                 android:orientation="vertical"
                 android:layout_width="match_parent"
@@ -24,12 +31,16 @@
                     android:text="Name"
                     android:id="@+id/textView4" android:textStyle="bold"
                 android:textSize="14dp" />
-            <TextView
+            <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:background="@android:color/transparent"
                     android:text=""
-                    android:id="@+id/textName"/>
+                    android:id="@+id/textName"
+                    android:inputType="textPersonName"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone"/>
             <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -71,8 +82,12 @@
                     android:id="@+id/textTime"/>
         </LinearLayout>
     </LinearLayout>
+
     <GridView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/gridView" android:numColumns="4" android:choiceMode="singleChoice"/>
+            android:layout_height="249dp"
+            android:id="@+id/gridView" android:numColumns="4" android:choiceMode="singleChoice"
+            android:layout_weight="1.15"
+        />
+
 </LinearLayout>
