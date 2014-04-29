@@ -154,13 +154,12 @@ public class Player extends GameObject {
     public void onCollision(GameObject player, GameScheduler gs){
         if(player.getLife() > 0){
             player.setLife(player.getLife() - 1);
-            float color[] = player.getColor();
-            color[0] += 0.01f;
-            player.setColor(color);
+            // that's not needed anymore, but i leave it here for the case we want to put in some blood
+//            float color[] = player.getColor();
+//            color[0] += 0.01f;
+//            player.setColor(color);
         } else {
             gs.setRunning(false);
-            // TODO game over should not be implemented like this
-            // i mean a method in gs that throws up a window with points, restart option and more
         }
 
         //Log.i(TAG, "EnemyHandler: Boobies won!");

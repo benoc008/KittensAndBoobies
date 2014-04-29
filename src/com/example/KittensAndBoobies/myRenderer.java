@@ -22,6 +22,9 @@ public class myRenderer implements GLSurfaceView.Renderer {
     private EnemyHandler eh;
     private GameScheduler gs;
 
+    private Square lifeBackground;
+    private Square life;
+
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private float[] mMVPMatrix = new float[16];
     private final float[] mProjectionMatrix = new float[16];
@@ -42,6 +45,23 @@ public class myRenderer implements GLSurfaceView.Renderer {
         GLES20.glClearColor(0.1f, 0.5f, 0.2f, 1.0f);
 
         player = new Player();
+
+        lifeBackground = new Square();
+        float lbgscale[] = {0.5f, 0.04f, 0f};
+        lifeBackground.setScale(lbgscale);
+        float black[] = {0f, 0f, 0f};
+        lifeBackground.setColor(black);
+        float lbgpos[] = {-0.25f, 0.95f, 0f};
+        lifeBackground.setPosition(lbgpos);
+
+        life = new Square();
+        float lifescale[] = {0.5f, 0.03f, 0f};
+        life.setScale(lifescale);
+        float red[] = {1f, 0f, 0f};
+        life.setColor(red);
+        float lifepos[] = {-0.25f, 0.95f, 0f};
+        life.setPosition(lifepos);
+
 
         // nasty shit
         gs = new GameScheduler(this);
@@ -92,7 +112,6 @@ public class myRenderer implements GLSurfaceView.Renderer {
         Matrix.translateM(mMVPMatrix, 0, player.getPosition()[0], player.getPosition()[1], player.getPosition()[2]); // apply translation
         Matrix.scaleM(mMVPMatrix, 0, player.getScale()[0], player.getScale()[1], player.getScale()[2]); // apply scale
 
-
         player.draw(mMVPMatrix);
 
         synchronized (eh) {
@@ -116,6 +135,26 @@ public class myRenderer implements GLSurfaceView.Renderer {
             gs.setLock(false);
             ((Object)eh).notify();
         }
+
+        //draw the life bar's background
+        Matrix.setIdentityM(mMVPMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        Matrix.translateM(mMVPMatrix, 0,
+                lifeBackground.getPosition()[0],
+                lifeBackground.getPosition()[1],
+                lifeBackground.getPosition()[2]);
+        Matrix.scaleM(mMVPMatrix, 0,
+                lifeBackground.getScale()[0],
+                lifeBackground.getScale()[1],
+                lifeBackground.getScale()[2]);
+        lifeBackground.draw(mMVPMatrix);
+
+        //draw the life bar
+        Matrix.setIdentityM(mMVPMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        Matrix.translateM(mMVPMatrix, 0, life.getPosition()[0], life.getPosition()[1], life.getPosition()[2]);
+        Matrix.scaleM(mMVPMatrix, 0, life.getScale()[0], life.getScale()[1], life.getScale()[2]);
+        life.draw(mMVPMatrix);
     }
 
     public void calcGame(){
@@ -140,6 +179,16 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
             eh.getToRemove().removeAll(eh.getToRemove());
             eh.getToAdd().removeAll(eh.getToAdd());
+
+            //set the lifebar's size and some ugly positioning
+            float t[] = life.getScale();
+            t[0] = player.getLife()/100f/2f - 0.02f;
+            if(t[0]<0)
+                t[0] = 0;
+            life.setScale(t);
+            float lifepos[] = life.getPosition();
+            lifepos[0] = -0.01f - t[0]/2f;
+            life.setPosition(lifepos);
 
             gs.setLock(false);
             ((Object)eh).notify();
