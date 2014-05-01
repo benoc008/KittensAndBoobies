@@ -1,31 +1,18 @@
-/*
- * Copyright (C) 2011 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.example.KittensAndBoobies;
+package com.example.KittensAndBoobies.Objects;
+
+import android.opengl.GLES20;
+import com.example.KittensAndBoobies.GameScheduler;
+import com.example.KittensAndBoobies.myRenderer;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
-import android.opengl.GLES20;
-
 /**
- * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
+ * Created by benoc on 27/04/2014.
  */
-public class Square extends GameObject{
+public class Player extends GameObject {
 
     private final String vertexShaderCode =
             // This matrix member variable provides a hook to manipulate
@@ -53,6 +40,8 @@ public class Square extends GameObject{
     private int mColorHandle;
     private int mMVPMatrixHandle;
 
+    private int reversed;
+
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
     static float squareCoords[] = {
@@ -68,7 +57,7 @@ public class Square extends GameObject{
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
-    public Square() {
+    public Player() {
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (# of coordinate values * 4 bytes per float)
@@ -99,8 +88,15 @@ public class Square extends GameObject{
         GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
         GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
-        float[] color = {0.2f, 0.898039216f, 0.709803922f, 1.0f };
+
+        float[] color = {0.2f, 0.709803922f, 0.898039216f, 1.0f };
         setColor(color);
+        float playerPos[] = {0f, 0.8f, 0f};
+        setPosition(playerPos);
+        float playerScale[] = {0.2f, 0.2f, 0.2f};
+        setScale(playerScale);
+        setLife(100);
+        reversed = 1;
     }
 //
 //    public Square(float[] pos){
@@ -163,15 +159,23 @@ public class Square extends GameObject{
     public void onCollision(GameObject player, GameScheduler gs){
         if(player.getLife() > 0){
             player.setLife(player.getLife() - 1);
-            float color[] = player.getColor();
-            color[0] += 0.01f;
-            player.setColor(color);
+            // that's not needed anymore, but i leave it here for the case we want to put in some blood
+//            float color[] = player.getColor();
+//            color[0] += 0.01f;
+//            player.setColor(color);
         } else {
             gs.setRunning(false);
-            // TODO game over should not be implemented like this
-            // i mean a method in gs that throws up a window with points, restart option and more
         }
 
         //Log.i(TAG, "EnemyHandler: Boobies won!");
     }
+
+    public int getReversed() {
+        return reversed;
+    }
+
+    public void setReversed(int reversed) {
+        this.reversed = reversed;
+    }
+
 }

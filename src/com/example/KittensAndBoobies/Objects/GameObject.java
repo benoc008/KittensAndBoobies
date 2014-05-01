@@ -1,4 +1,6 @@
-package com.example.KittensAndBoobies;
+package com.example.KittensAndBoobies.Objects;
+
+import com.example.KittensAndBoobies.GameScheduler;
 
 import java.util.Comparator;
 
@@ -17,6 +19,10 @@ public abstract class GameObject implements Comparator<GameObject> {
     public abstract GameObject clone();
 
     public abstract void onCollision(GameObject player, GameScheduler gs);
+
+    public void onDeath(GameObject player, GameScheduler gs) {
+
+    }
 
     public abstract void draw(float[] m);
 

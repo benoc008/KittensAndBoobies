@@ -1,11 +1,12 @@
 package com.example.KittensAndBoobies;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
+import com.example.KittensAndBoobies.Objects.GameObject;
+import com.example.KittensAndBoobies.Objects.Player;
+import com.example.KittensAndBoobies.Objects.Square;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -169,6 +170,9 @@ public class myRenderer implements GLSurfaceView.Renderer {
             gs.setLock(true);
             //Log.i(TAG, "pwnd: calcGame");
             for (GameObject s : eh.getToRemove()) {
+                if(eh.getEnemies().size() == 1) { // workaround for empty list --> enemy handler (bomb)
+                    eh.addNew(eh.getEnemies(), new Square());
+                }
                 eh.getEnemies().remove(s);
             }
 
@@ -247,7 +251,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
     public void setTrans(float trans) {
         float pos[] = player.getPosition();
-        pos[0] = calcPos(trans);
+        pos[0] = calcPos(trans) * player.getReversed();
         player.setPosition(pos);
     }
 

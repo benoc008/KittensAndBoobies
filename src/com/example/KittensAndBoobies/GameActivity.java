@@ -1,5 +1,6 @@
 package com.example.KittensAndBoobies;
 
+import android.opengl.Matrix;
 import com.example.KittensAndBoobies.Database.DataSource;
 import android.app.Activity;
 import android.content.Intent;
@@ -56,5 +57,10 @@ public class GameActivity extends Activity {
         datasource.close();
 
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        mGLView.onPause();
     }
 }

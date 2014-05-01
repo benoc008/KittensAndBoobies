@@ -2,10 +2,10 @@ package com.example.KittensAndBoobies;
 
 
 
-import android.util.Log;
+import com.example.KittensAndBoobies.Objects.GameObject;
+import com.example.KittensAndBoobies.Objects.Square;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,14 +34,18 @@ public class EnemyHandler {
             float temp[] = s.getPosition();
             temp[1] += s.getSpeed();
 
-            if (temp[1] > 1.0f + s.getScale()[1]/2) {
+            if (temp[1] > 1.0f + s.getScale()[1]/2 && s.getLife() < 0) {
+                s.onDeath(renderer.getPlayer(), gs);
                 toRemove.add(s);
                 //addNew(toAdd, new Square());      //let the GameScheduler handle this
             }
 
             if(s.getLife() > 0){
                 s.setLife(s.getLife() - 1);
-            } else if(s.getLife() == 0){
+            }
+
+            if(s.getLife() == 0){
+                s.onDeath(renderer.getPlayer(), gs);
                 toRemove.add(s);
             }
 

@@ -1,16 +1,38 @@
-package com.example.KittensAndBoobies;
+package com.example.KittensAndBoobies.Objects;
+
+/**
+ * Created by benoc on 01/05/2014.
+ */
+/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 import android.opengl.GLES20;
+import com.example.KittensAndBoobies.GameScheduler;
+import com.example.KittensAndBoobies.myRenderer;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+
 /**
- * Created by benoc on 27/04/2014.
+ * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
-public class Player extends GameObject {
+public class Bomb extends GameObject {
 
     private final String vertexShaderCode =
             // This matrix member variable provides a hook to manipulate
@@ -53,7 +75,7 @@ public class Player extends GameObject {
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
-    public Player() {
+    public Bomb() {
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (# of coordinate values * 4 bytes per float)
@@ -84,20 +106,9 @@ public class Player extends GameObject {
         GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
         GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
-
-        float[] color = {0.2f, 0.709803922f, 0.898039216f, 1.0f };
+        float[] color = {0.9f, 0.1f, 0.1f, 1.0f };
         setColor(color);
-        float playerPos[] = {0f, 0.8f, 0f};
-        setPosition(playerPos);
-        float playerScale[] = {0.2f, 0.2f, 0.2f};
-        setScale(playerScale);
-        setLife(100);
     }
-//
-//    public Square(float[] pos){
-//        this();
-//        this.position = pos;
-//    }
 
     /**
      * Encapsulates the OpenGL ES instructions for drawing this shape.
@@ -144,24 +155,18 @@ public class Player extends GameObject {
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 
-    public Square clone(){
-        Square temp = new Square();
+    public Bomb clone(){
+        Bomb temp = new Bomb();
         temp.setColor(getColor());
         temp.setPosition(getPosition());
         return temp;
     }
 
     public void onCollision(GameObject player, GameScheduler gs){
-        if(player.getLife() > 0){
-            player.setLife(player.getLife() - 1);
-            // that's not needed anymore, but i leave it here for the case we want to put in some blood
-//            float color[] = player.getColor();
-//            color[0] += 0.01f;
-//            player.setColor(color);
-        } else {
-            gs.setRunning(false);
+        //gs.getEh().getToRemove().addAll(gs.getEh().getEnemies());
+        //gs.getEh().getToAdd().add(new Square());
+        for(GameObject o : gs.getEh().getEnemies()){
+            o.setLife(0);
         }
-
-        //Log.i(TAG, "EnemyHandler: Boobies won!");
     }
 }

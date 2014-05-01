@@ -1,16 +1,35 @@
-package com.example.KittensAndBoobies;
-
-import android.opengl.GLES20;
+/*
+ * Copyright (C) 2011 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package com.example.KittensAndBoobies.Objects;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import android.opengl.GLES20;
+import android.util.Log;
+import com.example.KittensAndBoobies.GameActivity;
+import com.example.KittensAndBoobies.GameScheduler;
+import com.example.KittensAndBoobies.myRenderer;
+
 /**
- * Created by benoc on 27/04/2014.
+ * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
-public class Heal extends GameObject {
+public class Revers extends GameObject {
 
     private final String vertexShaderCode =
             // This matrix member variable provides a hook to manipulate
@@ -38,6 +57,8 @@ public class Heal extends GameObject {
     private int mColorHandle;
     private int mMVPMatrixHandle;
 
+    private boolean activated;
+
     // number of coordinates per vertex in this array
     static final int COORDS_PER_VERTEX = 3;
     static float squareCoords[] = {
@@ -53,7 +74,7 @@ public class Heal extends GameObject {
     /**
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
-    public Heal() {
+    public Revers() {
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (# of coordinate values * 4 bytes per float)
@@ -84,9 +105,15 @@ public class Heal extends GameObject {
         GLES20.glAttachShader(mProgram, vertexShader);   // add the vertex shader to program
         GLES20.glAttachShader(mProgram, fragmentShader); // add the fragment shader to program
         GLES20.glLinkProgram(mProgram);                  // create OpenGL program executables
-        float color[] = {0f, 1f, 0f, 1f};
+        float[] color = {0.89f, 0.898039216f, 0.1f, 1.0f };
         setColor(color);
+        activated = false;
     }
+//
+//    public Square(float[] pos){
+//        this();
+//        this.position = pos;
+//    }
 
     /**
      * Encapsulates the OpenGL ES instructions for drawing this shape.
@@ -133,8 +160,8 @@ public class Heal extends GameObject {
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 
-    public Heal clone(){
-        Heal temp = new Heal();
+    public Revers clone(){
+        Revers temp = new Revers();
         temp.setColor(getColor());
         temp.setPosition(getPosition());
         return temp;
@@ -142,14 +169,17 @@ public class Heal extends GameObject {
 
     public void onCollision(GameObject player, GameScheduler gs){
         if(getLife() == -1){
-            setLife(25);
+            ((Player) player).setReversed(((Player) player).getReversed() * -1);
+            setLife(100);
+            activated = true;
         }
-        if(player.getLife() < 100){
-            player.setLife(player.getLife() + 1);
-            float color[] = player.getColor();
-            color[0] -= 0.01f;
-            player.setColor(color);
+    }
+
+    @Override
+    public void onDeath(GameObject player, GameScheduler gs){
+        if(activated){
+            ((Player) player).setReversed(((Player) player).getReversed() * -1);
+            Log.i("asd", "meghivodik");
         }
-        gs.setPoints(gs.getPoints()+gs.getLevel());
     }
 }
