@@ -13,7 +13,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 /**
  * Created by benoc on 19/04/2014.
- * TODO this whole class should be overhauled. it's task is to render, nothing else
  */
 public class myRenderer implements GLSurfaceView.Renderer {
 
