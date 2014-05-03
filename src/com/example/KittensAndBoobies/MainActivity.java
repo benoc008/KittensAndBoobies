@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ToggleButton;
 import com.example.KittensAndBoobies.Profile.ProfileActivity;
 
 public class MainActivity extends Activity {
@@ -28,6 +29,29 @@ public class MainActivity extends Activity {
             editor.putBoolean("firstRun", false);
             editor.commit();
         }
+
+        //music setup
+        SharedPreferences spm = getSharedPreferences("MUSIC", MODE_WORLD_READABLE);
+        Boolean isFirstRunMusic = sp.getBoolean("firstRun",true);
+        if(isFirstRunMusic){
+            SharedPreferences.Editor editor = spm.edit();
+            editor.putBoolean("firstRun", false);
+            editor.putBoolean("Music", false);
+            editor.commit();
+        }
+    }
+
+    public void musicClick(View view){
+        boolean on = ((ToggleButton) view).isChecked();
+
+        SharedPreferences spm = getSharedPreferences("MUSIC", MODE_WORLD_READABLE);
+        SharedPreferences.Editor editor = spm.edit();
+        if (on) {
+            editor.putBoolean("Music", true);
+        } else {
+            editor.putBoolean("Music", false);
+        }
+        editor.commit();
     }
 
     public void startNewGame(View view){
