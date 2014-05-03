@@ -4,6 +4,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.util.Log;
+import com.example.KittensAndBoobies.Objects.Enemy;
 import com.example.KittensAndBoobies.Objects.GameObject;
 import com.example.KittensAndBoobies.Objects.Player;
 import com.example.KittensAndBoobies.Objects.Square;
@@ -44,12 +45,12 @@ public class myRenderer implements GLSurfaceView.Renderer {
         // Set the background frame color
         GLES20.glClearColor(0.1f, 0.5f, 0.2f, 1.0f);
 
-        player = new Player();
+        player = new Player(activity);
 
         lifeBackground = new Square();
         float lbgscale[] = {0.5f, 0.04f, 0f};
         lifeBackground.setScale(lbgscale);
-        float black[] = {0f, 0f, 0f};
+        float black[] = {0f, 0f, 0f, 1f};
         lifeBackground.setColor(black);
         float lbgpos[] = {-0.25f, 0.95f, 0f};
         lifeBackground.setPosition(lbgpos);
@@ -57,7 +58,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
         life = new Square();
         float lifescale[] = {0.5f, 0.03f, 0f};
         life.setScale(lifescale);
-        float red[] = {1f, 0f, 0f};
+        float red[] = {1f, 0f, 0f, 1f};
         life.setColor(red);
         float lifepos[] = {-0.25f, 0.95f, 0f};
         life.setPosition(lifepos);
@@ -68,7 +69,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
         eh = new EnemyHandler(this, gs);
         gs.setEh(eh);
 
-        eh.getEnemies().add(new Square());
+        eh.getEnemies().add(new Enemy(activity));
 
         for(GameObject s : eh.getEnemies()){
             s.setPosition(Spawn());
@@ -98,6 +99,9 @@ public class myRenderer implements GLSurfaceView.Renderer {
     public void renderGame(){
         // Draw background color
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+        GLES20.glEnable(GLES20.GL_BLEND);
+        GLES20.glBlendFunc(GLES20.GL_SRC_ALPHA, GLES20.GL_ONE_MINUS_SRC_ALPHA);
 
         Matrix.setIdentityM(mMVPMatrix, 0);
 
@@ -170,7 +174,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
             //Log.i(TAG, "pwnd: calcGame");
             for (GameObject s : eh.getToRemove()) {
                 if(eh.getEnemies().size() == 1) { // workaround for empty list --> enemy handler (bomb)
-                    eh.addNew(eh.getEnemies(), new Square());
+                    eh.addNew(eh.getEnemies(), new Enemy(activity));
                 }
                 eh.getEnemies().remove(s);
             }

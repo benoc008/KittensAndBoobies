@@ -1,9 +1,9 @@
 package com.example.KittensAndBoobies;
 
 import com.example.KittensAndBoobies.Objects.Bomb;
+import com.example.KittensAndBoobies.Objects.Enemy;
 import com.example.KittensAndBoobies.Objects.Heal;
 import com.example.KittensAndBoobies.Objects.Revers;
-import com.example.KittensAndBoobies.Objects.Square;
 
 /**
  * Created by benoc on 26/04/2014.
@@ -64,13 +64,13 @@ public class GameScheduler implements Runnable {
                 double rand = Math.random();
                 if(rand < 0.05) {
                     if (rand > 0.046) {                   //put some heals too
-                        eh.addNew(eh.getToAdd(), new Bomb());
+                        eh.addNew(eh.getToAdd(), new Bomb(renderer.getActivity()));
                     } else if (rand > 0.042){
-                        eh.addNew(eh.getToAdd(), new Heal());
+                        eh.addNew(eh.getToAdd(), new Heal(renderer.getActivity()));
                     } else if (rand > 0.038){
-                        eh.addNew(eh.getToAdd(), new Revers());
+                        eh.addNew(eh.getToAdd(), new Revers(renderer.getActivity()));
                     } else {
-                        eh.addNew(eh.getToAdd(), new Square());
+                        eh.addNew(eh.getToAdd(), new Enemy(renderer.getActivity()));
                     }
                     points++;
                 }

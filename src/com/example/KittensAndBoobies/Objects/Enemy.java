@@ -1,8 +1,3 @@
-package com.example.KittensAndBoobies.Objects;
-
-/**
- * Created by benoc on 01/05/2014.
- */
 /*
  * Copyright (C) 2011 The Android Open Source Project
  *
@@ -18,44 +13,40 @@ package com.example.KittensAndBoobies.Objects;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.example.KittensAndBoobies.Objects;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.opengl.GLES20;
 import com.example.KittensAndBoobies.GameScheduler;
 import com.example.KittensAndBoobies.R;
-import com.example.KittensAndBoobies.myRenderer;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-import java.nio.ShortBuffer;
-
 
 /**
  * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
-public class Bomb extends GameObject {
+public class Enemy extends GameObject {
 
-    private int resourceId = R.drawable.bomb;
+    private int resourceId = R.drawable.kasa;
 
-    public Bomb(Activity activity){
+    public Enemy(Activity activity){
         super(activity);
         setResourceId(resourceId);
     }
 
-    public Bomb clone(){
-        Bomb temp = new Bomb(getActivity());
+    public Enemy clone(){
+        Enemy temp = new Enemy(getActivity());
         temp.setColor(getColor());
         temp.setPosition(getPosition());
         return temp;
     }
 
     public void onCollision(GameObject player, GameScheduler gs){
-        //gs.getEh().getToRemove().addAll(gs.getEh().getEnemies());
-        //gs.getEh().getToAdd().add(new Enemy());
-        for(GameObject o : gs.getEh().getEnemies()){
-            o.setLife(0);
+        if(player.getLife() > 0){
+            player.setLife(player.getLife() - 1);
+        } else {
+            gs.setRunning(false);
+            // TODO game over should not be implemented like this
+            // i mean a method in gs that throws up a window with points, restart option and more
         }
+
+        //Log.i(TAG, "EnemyHandler: Boobies won!");
     }
 }

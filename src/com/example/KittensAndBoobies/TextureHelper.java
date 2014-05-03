@@ -3,6 +3,7 @@ package com.example.KittensAndBoobies;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.opengl.GLES20;
 import android.opengl.GLUtils;
 
@@ -21,9 +22,23 @@ public class TextureHelper {
         {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;   // No pre-scaling
+            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//            options.inMutable = true;
 
             // Read in the resource
-            final Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+            Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
+
+//            int [] allpixels = new int [ bitmap.getHeight()*bitmap.getWidth()];
+//
+//            bitmap.getPixels(allpixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(),bitmap.getHeight());
+//
+//            for(int i =0; i<bitmap.getHeight()*bitmap.getWidth();i++){
+//
+//                if( allpixels[i] == Color.BLACK)
+//                    allpixels[i] = Color.RED;
+//            }
+//
+//            bitmap.setPixels(allpixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
 
             // Bind to the texture in OpenGL
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);

@@ -20,6 +20,7 @@ import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.nio.ShortBuffer;
 
+import android.app.Activity;
 import android.opengl.GLES20;
 import com.example.KittensAndBoobies.GameScheduler;
 import com.example.KittensAndBoobies.myRenderer;
@@ -27,7 +28,11 @@ import com.example.KittensAndBoobies.myRenderer;
 /**
  * A two-dimensional square for use as a drawn object in OpenGL ES 2.0.
  */
-public class Square extends GameObject {
+public class Square {
+    private float color[] = { 0.1f, 0.1f, 0.1f, 1.0f };
+    private float position[] = {0f, 0f, 0f};
+    private float scale[] = {0.2f, 0.2f, 0.2f};
+
 
     private final String vertexShaderCode =
             // This matrix member variable provides a hook to manipulate
@@ -155,22 +160,27 @@ public class Square extends GameObject {
         GLES20.glDisableVertexAttribArray(mPositionHandle);
     }
 
-    public Square clone(){
-        Square temp = new Square();
-        temp.setColor(getColor());
-        temp.setPosition(getPosition());
-        return temp;
+    public float[] getColor() {
+        return color;
     }
 
-    public void onCollision(GameObject player, GameScheduler gs){
-        if(player.getLife() > 0){
-            player.setLife(player.getLife() - 1);
-        } else {
-            gs.setRunning(false);
-            // TODO game over should not be implemented like this
-            // i mean a method in gs that throws up a window with points, restart option and more
-        }
+    public void setColor(float[] color) {
+        this.color = color;
+    }
 
-        //Log.i(TAG, "EnemyHandler: Boobies won!");
+    public float[] getPosition() {
+        return position;
+    }
+
+    public void setPosition(float[] position) {
+        this.position = position;
+    }
+
+    public float[] getScale() {
+        return scale;
+    }
+
+    public void setScale(float[] scale) {
+        this.scale = scale;
     }
 }
