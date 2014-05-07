@@ -18,7 +18,7 @@ public class Player extends GameObject {
         float playerScale[] = {0.2f, 0.2f, 0.2f};
         setScale(playerScale);
         setLife(100);
-        reversed = 1;
+        reversed = 0;
     }
 
     public Enemy clone(){

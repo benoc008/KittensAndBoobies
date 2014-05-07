@@ -55,6 +55,10 @@ public class EnemyHandler {
                 s.onCollision(renderer.getPlayer(), gs);
             }
         }
+        //set player's reversed time...
+        if(renderer.getPlayer().getReversed() > 0) {
+            renderer.getPlayer().setReversed(renderer.getPlayer().getReversed() - 1);
+        }
     }
 
     /**

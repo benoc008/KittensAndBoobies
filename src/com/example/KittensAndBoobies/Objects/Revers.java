@@ -48,7 +48,8 @@ public class Revers extends GameObject {
 
     public void onCollision(GameObject player, GameScheduler gs){
         if(getLife() == -1){
-            ((Player) player).setReversed(((Player) player).getReversed() * -1);
+            //((Player) player).setReversed(((Player) player).getReversed() * -1);
+            ((Player) player).setReversed(100);
             setLife(100);
             activated = true;
         }
@@ -56,8 +57,8 @@ public class Revers extends GameObject {
 
     @Override
     public void onDeath(GameObject player, GameScheduler gs){
-        if(activated){
-            ((Player) player).setReversed(((Player) player).getReversed() * -1);
-        }
+//        if(activated){
+//            ((Player) player).setReversed(((Player) player).getReversed() * -1);
+//        }
     }
 }

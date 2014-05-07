@@ -27,6 +27,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
     private Square lifeBackground;
     private Square life;
+    private Square revtime;
 
     // mMVPMatrix is an abbreviation for "Model View Projection Matrix"
     private float[] mMVPMatrix = new float[16];
@@ -74,6 +75,14 @@ public class myRenderer implements GLSurfaceView.Renderer {
         life.setColor(red);
         float lifepos[] = {-0.25f, 0.95f, 0f};
         life.setPosition(lifepos);
+
+        revtime = new Square();
+        float revtimescale[] = {0.5f, 0.01f, 0f};
+        revtime.setScale(revtimescale);
+        float blue[] = {0f, 0f, 1f, 1f};
+        revtime.setColor(blue);
+        float revtimepos[] = {-0.25f, 0.94f, 0f};
+        revtime.setPosition(revtimepos);
 
 
         // nasty shit
@@ -171,6 +180,13 @@ public class myRenderer implements GLSurfaceView.Renderer {
         Matrix.translateM(mMVPMatrix, 0, life.getPosition()[0], life.getPosition()[1], life.getPosition()[2]);
         Matrix.scaleM(mMVPMatrix, 0, life.getScale()[0], life.getScale()[1], life.getScale()[2]);
         life.draw(mMVPMatrix);
+
+        //draw the reverse time bar
+        Matrix.setIdentityM(mMVPMatrix, 0);
+        Matrix.multiplyMM(mMVPMatrix, 0, mProjectionMatrix, 0, mViewMatrix, 0);
+        Matrix.translateM(mMVPMatrix, 0, revtime.getPosition()[0], revtime.getPosition()[1], revtime.getPosition()[2]);
+        Matrix.scaleM(mMVPMatrix, 0, revtime.getScale()[0], revtime.getScale()[1], revtime.getScale()[2]);
+        revtime.draw(mMVPMatrix);
     }
 
     public void calcGame(){
@@ -208,6 +224,16 @@ public class myRenderer implements GLSurfaceView.Renderer {
             float lifepos[] = life.getPosition();
             lifepos[0] = -0.01f - t[0]/2f;
             life.setPosition(lifepos);
+
+            //set the revtimebar size
+            t = revtime.getScale();
+            t[0] = player.getReversed()/100f/2f - 0.02f;
+            if(t[0]<0)
+                t[0] = 0;
+            revtime.setScale(t);
+            float revtimepos[] = revtime.getPosition();
+            revtimepos[0] = -0.01f - t[0]/2f;
+            revtime.setPosition(revtimepos);
 
             gs.setLock(false);
             ((Object)eh).notify();
@@ -266,7 +292,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
     public void setTrans(float trans) {
         float pos[] = player.getPosition();
-        pos[0] = calcPos(trans) * player.getReversed();
+        pos[0] = calcPos(trans) * ((player.getReversed()>0)?-1:1);
         player.setPosition(pos);
     }
 
