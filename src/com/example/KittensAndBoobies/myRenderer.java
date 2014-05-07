@@ -11,6 +11,8 @@ import com.example.KittensAndBoobies.Objects.Square;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by benoc on 19/04/2014.
@@ -40,12 +42,22 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
     private GameActivity activity;
 
+    private Map<String, Integer> textures;
+
 
     public void onSurfaceCreated(GL10 unused, EGLConfig config) {
         // Set the background frame color
         GLES20.glClearColor(0.1f, 0.5f, 0.2f, 1.0f);
 
-        player = new Player(activity);
+        //set up textures
+        textures = new HashMap<String, Integer>();
+        textures.put("Player", TextureHelper.loadTexture(activity, R.drawable.kitti1));
+        textures.put("Enemy", TextureHelper.loadTexture(activity, R.drawable.kasa));
+        textures.put("Bomb", TextureHelper.loadTexture(activity, R.drawable.bomb));
+        textures.put("Revers", TextureHelper.loadTexture(activity, R.drawable.reverse));
+        textures.put("Heal", TextureHelper.loadTexture(activity, R.drawable.nutella));
+
+        player = new Player(textures.get("Player"));
 
         lifeBackground = new Square();
         float lbgscale[] = {0.5f, 0.04f, 0f};
@@ -69,7 +81,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
         eh = new EnemyHandler(this, gs);
         gs.setEh(eh);
 
-        eh.getEnemies().add(new Enemy(activity));
+        eh.getEnemies().add(new Enemy(textures.get("Enemy")));
 
         for(GameObject s : eh.getEnemies()){
             s.setPosition(Spawn());
@@ -174,7 +186,7 @@ public class myRenderer implements GLSurfaceView.Renderer {
             //Log.i(TAG, "pwnd: calcGame");
             for (GameObject s : eh.getToRemove()) {
                 if(eh.getEnemies().size() == 1) { // workaround for empty list --> enemy handler (bomb)
-                    eh.addNew(eh.getEnemies(), new Enemy(activity));
+                    eh.addNew(eh.getEnemies(), new Enemy(textures.get("Enemy")));
                 }
                 eh.getEnemies().remove(s);
             }
@@ -295,5 +307,9 @@ public class myRenderer implements GLSurfaceView.Renderer {
 
     public void setActivity(GameActivity activity) {
         this.activity = activity;
+    }
+
+    public Map<String, Integer> getTextures() {
+        return textures;
     }
 }

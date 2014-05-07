@@ -37,15 +37,12 @@ import java.nio.ShortBuffer;
  */
 public class Bomb extends GameObject {
 
-    private int resourceId = R.drawable.bomb;
-
-    public Bomb(Activity activity){
-        super(activity);
-        setResourceId(resourceId);
+    public Bomb(int texture){
+        super(texture);
     }
 
     public Bomb clone(){
-        Bomb temp = new Bomb(getActivity());
+        Bomb temp = new Bomb(getmTextureDataHandle());
         temp.setColor(getColor());
         temp.setPosition(getPosition());
         return temp;

@@ -28,18 +28,6 @@ public class TextureHelper {
             // Read in the resource
             Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), resourceId, options);
 
-//            int [] allpixels = new int [ bitmap.getHeight()*bitmap.getWidth()];
-//
-//            bitmap.getPixels(allpixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(),bitmap.getHeight());
-//
-//            for(int i =0; i<bitmap.getHeight()*bitmap.getWidth();i++){
-//
-//                if( allpixels[i] == Color.BLACK)
-//                    allpixels[i] = Color.RED;
-//            }
-//
-//            bitmap.setPixels(allpixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
-
             // Bind to the texture in OpenGL
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureHandle[0]);
 

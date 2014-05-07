@@ -2,6 +2,7 @@ package com.example.KittensAndBoobies.Objects;
 
 import android.app.Activity;
 import android.opengl.GLES20;
+import android.util.Log;
 import com.example.KittensAndBoobies.GameScheduler;
 import com.example.KittensAndBoobies.R;
 import com.example.KittensAndBoobies.TextureHelper;
@@ -23,8 +24,6 @@ public abstract class GameObject implements Comparator<GameObject> {
     private float scale[] = {0.2f, 0.2f, 0.2f};
     private float speed = 0.01f;
     private int life = -1;          //means disabled
-
-    private Activity activity;
 
     private final String vertexShaderCode =
             "attribute vec2 a_TexCoordinate;" +
@@ -50,7 +49,7 @@ public abstract class GameObject implements Comparator<GameObject> {
     private int mTextureUniformHandle;
     private int mTextureCoordinateHandle;
     private final int mTextureCoordinateDataSize = 2;
-    private int mTextureDataHandle;
+    private int mTextureDataHandle = 0;
 
     private final FloatBuffer vertexBuffer;
     private final ShortBuffer drawListBuffer;
@@ -85,8 +84,8 @@ public abstract class GameObject implements Comparator<GameObject> {
      * Sets up the drawing object data for use in an OpenGL ES context.
      */
 
-    public GameObject(Activity activity) {
-        this.activity = activity;
+    public GameObject(int texture) {
+        mTextureDataHandle = texture;
         // initialize vertex byte buffer for shape coordinates
         ByteBuffer bb = ByteBuffer.allocateDirect(
                 // (# of coordinate values * 4 bytes per float)
@@ -137,8 +136,28 @@ public abstract class GameObject implements Comparator<GameObject> {
 
         if(firstrun) {
             firstrun = false;
-            //Load the texture
-            mTextureDataHandle = TextureHelper.loadTexture(getActivity(), resourceId);
+//
+//            //Load the texture || this should be in the constructor, but that is not exclusively called by the gl thread
+//            if(mTextureDataHandle == 0) {
+//                mTextureDataHandle = TextureHelper.loadTexture(getActivity(), resourceId);
+//            }
+            //Set Texture Handles and bind Texture
+            mTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgram, "a_TexCoordinate");
+            mTextureUniformHandle = GLES20.glGetAttribLocation(mProgram, "u_Texture");
+
+            //Set the active texture unit to texture unit 0.
+            GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+
+            //Bind the texture to this unit.
+            GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDataHandle);
+
+            //Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
+            GLES20.glUniform1i(mTextureUniformHandle, 0);
+
+            //Pass in the texture coordinate information
+            mCubeTextureCoordinates.position(0);
+            GLES20.glVertexAttribPointer(mTextureCoordinateHandle, mTextureCoordinateDataSize, GLES20.GL_FLOAT, false, 0, mCubeTextureCoordinates);
+            GLES20.glEnableVertexAttribArray(mTextureCoordinateHandle);
         }
         // Add program to OpenGL environment
         GLES20.glUseProgram(mProgram);
@@ -161,18 +180,18 @@ public abstract class GameObject implements Comparator<GameObject> {
         // Set color for drawing the triangle
         GLES20.glUniform4fv(mColorHandle, 1, getColor(), 0);
 
-        //Set Texture Handles and bind Texture
-        mTextureUniformHandle = GLES20.glGetAttribLocation(mProgram, "u_Texture");
-        mTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgram, "a_TexCoordinate");
-
-        //Set the active texture unit to texture unit 0.
-        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-
+//        //Set Texture Handles and bind Texture
+//        mTextureUniformHandle = GLES20.glGetAttribLocation(mProgram, "u_Texture");
+//        mTextureCoordinateHandle = GLES20.glGetAttribLocation(mProgram, "a_TexCoordinate");
+//
+//        //Set the active texture unit to texture unit 0.
+//        GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
+//
         //Bind the texture to this unit.
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mTextureDataHandle);
 
         //Tell the texture uniform sampler to use this texture in the shader by binding to texture unit 0.
-        GLES20.glUniform1i(mTextureUniformHandle, 0);
+//        GLES20.glUniform1i(mTextureUniformHandle, 0);
 
         //Pass in the texture coordinate information
         mCubeTextureCoordinates.position(0);
@@ -251,11 +270,11 @@ public abstract class GameObject implements Comparator<GameObject> {
         this.life = life;
     }
 
-    public Activity getActivity() {
-        return activity;
-    }
-
     public void setResourceId(int resourceId) {
         this.resourceId = resourceId;
+    }
+
+    public int getmTextureDataHandle() {
+        return mTextureDataHandle;
     }
 }

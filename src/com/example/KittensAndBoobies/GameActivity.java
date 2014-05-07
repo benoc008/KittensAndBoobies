@@ -30,7 +30,7 @@ public class GameActivity extends Activity {
         mGLView = new MyGLSurfaceView(this);
         setContentView(mGLView);
 
-        mediaPlayer = MediaPlayer.create(this, R.raw.theme);
+        mediaPlayer = MediaPlayer.create(this, R.raw.kittensandboobies);
         SharedPreferences sp = getSharedPreferences(PREF_NAME, MODE_WORLD_READABLE);
         music = sp.getBoolean("Music", false);
         if(music){

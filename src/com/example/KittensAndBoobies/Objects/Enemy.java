@@ -24,15 +24,12 @@ import com.example.KittensAndBoobies.R;
  */
 public class Enemy extends GameObject {
 
-    private int resourceId = R.drawable.kasa;
-
-    public Enemy(Activity activity){
-        super(activity);
-        setResourceId(resourceId);
+    public Enemy(int texture){
+        super(texture);
     }
 
     public Enemy clone(){
-        Enemy temp = new Enemy(getActivity());
+        Enemy temp = new Enemy(getmTextureDataHandle());
         temp.setColor(getColor());
         temp.setPosition(getPosition());
         return temp;

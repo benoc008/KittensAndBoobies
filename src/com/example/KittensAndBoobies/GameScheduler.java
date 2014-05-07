@@ -64,13 +64,13 @@ public class GameScheduler implements Runnable {
                 double rand = Math.random();
                 if(rand < 0.05) {
                     if (rand > 0.046) {                   //put some heals too
-                        eh.addNew(eh.getToAdd(), new Bomb(renderer.getActivity()));
+                        eh.addNew(eh.getToAdd(), new Bomb(renderer.getTextures().get("Bomb")));
                     } else if (rand > 0.042){
-                        eh.addNew(eh.getToAdd(), new Heal(renderer.getActivity()));
+                        eh.addNew(eh.getToAdd(), new Heal(renderer.getTextures().get("Heal")));
                     } else if (rand > 0.038){
-                        eh.addNew(eh.getToAdd(), new Revers(renderer.getActivity()));
+                        eh.addNew(eh.getToAdd(), new Revers(renderer.getTextures().get("Revers")));
                     } else {
-                        eh.addNew(eh.getToAdd(), new Enemy(renderer.getActivity()));
+                        eh.addNew(eh.getToAdd(), new Enemy(renderer.getTextures().get("Enemy")));
                     }
                     points++;
                 }

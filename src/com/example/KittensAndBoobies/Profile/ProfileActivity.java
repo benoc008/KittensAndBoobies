@@ -109,6 +109,7 @@ public class ProfileActivity extends Activity implements ViewSwitcher.ViewFactor
         datasource = new DataSource(this);
         datasource.open();
         List<Record> values = datasource.getAllRecords();
+        datasource.close();
         if(values.size() == 0) {
             return;
         }
@@ -118,8 +119,6 @@ public class ProfileActivity extends Activity implements ViewSwitcher.ViewFactor
         for(Record r : values){
             sumDuration += r.getDuration();
         }
-
-        //TODO datasource.close(); ????
     }
 
     /**

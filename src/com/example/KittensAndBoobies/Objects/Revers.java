@@ -35,15 +35,12 @@ public class Revers extends GameObject {
 
     private boolean activated;
 
-    private int resourceId = R.drawable.reverse;
-
-    public Revers(Activity activity){
-        super(activity);
-        setResourceId(resourceId);
+    public Revers(int texture){
+        super(texture);
     }
 
     public Revers clone(){
-        Revers temp = new Revers(getActivity());
+        Revers temp = new Revers(getmTextureDataHandle());
         temp.setColor(getColor());
         temp.setPosition(getPosition());
         return temp;

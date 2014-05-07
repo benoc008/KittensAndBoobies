@@ -11,11 +11,8 @@ public class Player extends GameObject {
 
     private int reversed;
 
-    private int resourceId = R.drawable.kitti1;
-
-    public Player(Activity activity) {
-        super(activity);
-        setResourceId(resourceId);
+    public Player(int texture){
+        super(texture);
         float playerPos[] = {0f, 0.8f, 0f};
         setPosition(playerPos);
         float playerScale[] = {0.2f, 0.2f, 0.2f};
@@ -25,7 +22,7 @@ public class Player extends GameObject {
     }
 
     public Enemy clone(){
-        Enemy temp = new Enemy(getActivity());
+        Enemy temp = new Enemy(getmTextureDataHandle());
         temp.setColor(getColor());
         temp.setPosition(getPosition());
         return temp;

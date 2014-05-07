@@ -72,7 +72,7 @@ public class EnemyHandler {
                 coll.add(o);
             }
         }
-        Collections.sort(enemies, new Enemy(renderer.getActivity()));            //maybe we should create an own comparator class for this
+        Collections.sort(enemies, new Enemy(renderer.getTextures().get("Enemy")));            //maybe we should create an own comparator class for this
 
         boolean success = false;
         GameObject newtry = curr.clone();
@@ -96,7 +96,7 @@ public class EnemyHandler {
         List<GameObject> temp = new ArrayList<GameObject>();
         temp.addAll(coll);
         temp.add(curr);
-        Collections.sort(temp, new Enemy(renderer.getActivity()));                       //too much sorting
+        Collections.sort(temp, new Enemy(renderer.getTextures().get("Enemy")));                       //too much sorting
                                                                     //TODO maybe we should use TREESET....
         boolean result = false;
         float prev = -renderer.getRatio();

@@ -16,15 +16,12 @@ import java.nio.ShortBuffer;
  */
 public class Heal extends GameObject {
 
-    private int resourceId = R.drawable.nutella;
-
-    public Heal(Activity activity){
-        super(activity);
-        setResourceId(resourceId);
+    public Heal(int texture){
+        super(texture);
     }
 
     public Heal clone(){
-        Heal temp = new Heal(getActivity());
+        Heal temp = new Heal(getmTextureDataHandle());
         temp.setColor(getColor());
         temp.setPosition(getPosition());
         return temp;
