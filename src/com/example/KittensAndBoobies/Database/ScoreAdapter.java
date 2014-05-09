@@ -1,6 +1,7 @@
 package com.example.KittensAndBoobies.Database;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +38,8 @@ public class ScoreAdapter extends BaseAdapter{
     }
 
     @Override
-    public Object getItem(int position) {
+    public Object getItem(int position)
+    {
         return values.get(position);
     }
 
@@ -54,7 +56,7 @@ public class ScoreAdapter extends BaseAdapter{
 
         // score
         TextView score = (TextView) vi.findViewById(R.id.score);
-        score.append(""+values.get(position).getScore());
+        score.setText(""+values.get(position).getScore());
 
         //duration
         Date durationDate = new Date(values.get(position).getDuration() - TimeZone.getDefault().getRawOffset());
@@ -62,7 +64,7 @@ public class ScoreAdapter extends BaseAdapter{
         String durationFormatted = formatter.format(durationDate);
 
         TextView duration = (TextView) vi.findViewById(R.id.duration);
-        duration.append(durationFormatted);
+        duration.setText("Duration: " + durationFormatted);
 
         // start
         Date startDate = new Date(values.get(position).getStart_time() - TimeZone.getDefault().getRawOffset());
@@ -70,7 +72,7 @@ public class ScoreAdapter extends BaseAdapter{
         String startFormatted = startformatter.format(startDate);
 
         TextView start = (TextView) vi.findViewById(R.id.start);
-        start.append(startFormatted);
+        start.setText("Start: " + startFormatted);
         return vi;
     }
 }
